@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Carte Touristique Consolidée - Pouilles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .legend {
+      background: white;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      line-height: 1.5em;
+    }
+    .legend i {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+
+  <script>
+    const map = L.map('map').setView([40.75, 17], 8.3);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    L.control.scale().addTo(map);
+    map.addControl(new L.Control.Measure({ position: 'topright' }));
+
+    function addMarkers(data, color, prefix) {
+      data.forEach(item => {
+        const icon = L.divIcon({
+          html: `<div style="background:${color}; border-radius:50%; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:white;">${item.id}</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
+          popupAnchor: [0, -14]
+        });
+
+        L.marker([item.lat, item.lon], { icon }).addTo(map)
+          .bindPopup(`<b>${prefix}${item.id}. ${item.name}</b><br><i>ZTL :</i> ${item.ztl ? "<b style='color:red'>Oui</b>" : "Non"}`);
+      });
+    }
+
+    const locaux = [
+      { id: 1, name: "Polignano a Mare", lat: 40.9957, lon: 17.2161, ztl: true, type: "top" },
+      { id: 2, name: "Locorotondo", lat: 40.7554, lon: 17.3216, ztl: true, type: "top" },
+      { id: 3, name: "Castro & Grotta Zinzulusa", lat: 39.9936, lon: 18.4244, ztl: false, type: "top" },
+      { id: 4, name: "Cisternino", lat: 40.7411, lon: 17.4211, ztl: true, type: "top" },
+      { id: 5, name: "Specchia", lat: 39.9113, lon: 18.2955, ztl: false, type: "top" },
+      { id: 6, name: "Conversano", lat: 40.9708, lon: 17.1123, ztl: true, type: "top" },
+      { id: 7, name: "Gravina in Puglia", lat: 40.8186, lon: 16.4219, ztl: false, type: "top" },
+      { id: 8, name: "Altamura", lat: 40.8267, lon: 16.5548, ztl: true, type: "optionnel" },
+      { id: 9, name: "Massafra", lat: 40.6051, lon: 17.1068, ztl: false, type: "top" },
+      { id: 10, name: "Matino", lat: 39.9852, lon: 18.1464, ztl: false, type: "optionnel" },
+      { id: 11, name: "Calimera", lat: 40.2595, lon: 18.2893, ztl: false, type: "optionnel" },
+      { id: 12, name: "Oria", lat: 40.4991, lon: 17.6373, ztl: true, type: "top" },
+      { id: 13, name: "Mola di Bari", lat: 41.0596, lon: 17.0858, ztl: false, type: "optionnel" },
+      { id: 14, name: "Monteruga", lat: 40.3708, lon: 17.9392, ztl: false, type: "optionnel" }
+    ];
+    addMarkers(locaux, "#2e8b57", "L");
+
+    const guides = [
+      { id: 1, name: "Bari Vecchia", lat: 41.1313, lon: 16.8719, ztl: true, optionnel: false },
+      { id: 2, name: "Monopoli", lat: 40.9503, lon: 17.3001, ztl: true, optionnel: false },
+      { id: 3, name: "Alberobello", lat: 40.7833, lon: 17.2333, ztl: true, optionnel: false },
+      { id: 4, name: "Martina Franca", lat: 40.7016, lon: 17.3333, ztl: true, optionnel: true },
+      { id: 5, name: "Ostuni", lat: 40.7306, lon: 17.5775, ztl: true, optionnel: false },
+      { id: 6, name: "Lecce", lat: 40.3529, lon: 18.1743, ztl: true, optionnel: false },
+      { id: 7, name: "Otranto", lat: 40.1485, lon: 18.4885, ztl: true, optionnel: false },
+      { id: 8, name: "Gallipoli", lat: 40.0555, lon: 17.9898, ztl: true, optionnel: false },
+      { id: 9, name: "Nardò", lat: 40.1794, lon: 18.0326, ztl: false, optionnel: false },
+      { id: 10, name: "Grottaglie", lat: 40.5382, lon: 17.4372, ztl: false, optionnel: false },
+      { id: 11, name: "Matera", lat: 40.6678, lon: 16.6008, ztl: true, optionnel: false },
+      { id: 12, name: "Trani", lat: 41.2782, lon: 16.4128, ztl: true, optionnel: true },
+      { id: 13, name: "Monte Sant’Angelo", lat: 41.7082, lon: 15.9614, ztl: true, optionnel: true },
+      { id: 14, name: "Castel del Monte", lat: 41.0846, lon: 16.2709, ztl: false, optionnel: true }
+    ];
+    addMarkers(guides, "#d9534f", "G");
+
+    const plages = [
+      { id: 1, name: "Baia dei Turchi", lat: 40.1488, lon: 18.5165, ztl: false },
+      { id: 2, name: "Pescoluse", lat: 39.7947, lon: 18.3247, ztl: false },
+      { id: 3, name: "Torre Lapillo", lat: 40.2701, lon: 17.8276, ztl: false },
+      { id: 4, name: "Punta Prosciutto", lat: 40.2956, lon: 17.7611, ztl: false },
+      { id: 5, name: "Torre dell’Orso", lat: 40.2767, lon: 18.4322, ztl: false },
+      { id: 6, name: "Porto Selvaggio", lat: 40.1432, lon: 17.9811, ztl: false },
+      { id: 7, name: "Grotta della Poesia", lat: 40.2784, lon: 18.4311, ztl: false },
+      { id: 8, name: "Spiaggia Alimini", lat: 40.1906, lon: 18.4674, ztl: false },
+      { id: 9, name: "Cala Porto", lat: 40.995, lon: 17.2191, ztl: true },
+      { id: 10, name: "Cala Paura", lat: 40.9961, lon: 17.2216, ztl: true }
+    ];
+    addMarkers(plages, "#007bff", "P");
+
+    const legend = L.control({position: 'bottomright'});
+    legend.onAdd = function () {
+      const div = L.DomUtil.create('div', 'legend');
+      div.innerHTML += '<strong>Légende</strong><br>';
+      div.innerHTML += '<i style="background:#2e8b57"></i> Lieux Locaux<br>';
+      div.innerHTML += '<i style="background:#d9534f"></i> Lieux Guides<br>';
+      div.innerHTML += '<i style="background:#007bff"></i> Plages<br>';
+      div.innerHTML += '<br><b>ZTL</b> : Zone à Trafic Limité';
+      return div;
+    };
+    legend.addTo(map);
+  </script>
+</body>
+</html>
